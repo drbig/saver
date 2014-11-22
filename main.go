@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	VERSION = `0.1`
 	timeFmt = `2006-01-02 15:04:05`
 )
 
@@ -23,16 +24,18 @@ var (
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s (options...) <command>\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s (options...) <command>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "saver v%s by Piotr S. Staszewski, see LICENSE.txt\n\n", VERSION)
+		fmt.Fprintln(os.Stderr, "Options:")
 		flag.PrintDefaults()
 		fmt.Fprintln(os.Stderr, "\nCommands:")
-		fmt.Fprintln(os.Stderr, "[a]dd <name> <path>                 - add new game")
-		fmt.Fprintln(os.Stderr, "[d]el <name>                        - delete game and all saves")
-		fmt.Fprintln(os.Stderr, "[l]ist                              - list games")
-		fmt.Fprintln(os.Stderr, "[g]ame <name> [l]ist                - list saves")
-		fmt.Fprintln(os.Stderr, "[g]ame <name> [b]backup             - backup current save")
-		fmt.Fprintln(os.Stderr, "[g]ame <name> [r]estore <id>        - restore given save")
-		fmt.Fprintln(os.Stderr, "[g]ame <name> [d]elete <id|from-to> - delete given save(s)")
+		fmt.Fprintln(os.Stderr, "  [a]dd <name> <path>                 - add new game")
+		fmt.Fprintln(os.Stderr, "  [d]el <name>                        - delete game and all saves")
+		fmt.Fprintln(os.Stderr, "  [l]ist                              - list games")
+		fmt.Fprintln(os.Stderr, "  [g]ame <name> [l]ist                - list saves")
+		fmt.Fprintln(os.Stderr, "  [g]ame <name> [b]backup             - backup current save")
+		fmt.Fprintln(os.Stderr, "  [g]ame <name> [r]estore <id>        - restore given save")
+		fmt.Fprintln(os.Stderr, "  [g]ame <name> [d]elete <id|from-to> - delete given save(s)")
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
