@@ -98,6 +98,9 @@ func main() {
 				os.Exit(3)
 			}
 			g.Stamp = time.Now()
+			if flag.NArg() > 3 {
+				sv.Note = flag.Arg(3)
+			}
 			fmt.Println("Backed up at", sv.Stamp.Format(timeFmt))
 			save = true
 		case 'r':
