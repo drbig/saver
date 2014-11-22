@@ -40,6 +40,34 @@ func (g *Game) PrintWhole() {
 	}
 }
 
+func (g *Game) Delete(from, to int) (n int, err error) {
+	if from < 1 {
+		return n, fmt.Errorf("Index from %d out of range", from)
+	}
+	if to > len(g.Saves) {
+		return n, fmt.Errorf("Index to %d out of range", from)
+	}
+	from--
+	i := from
+	for ; i < to; i++ {
+		s := g.Saves[i]
+		if flagVerbose {
+			fmt.Fprintf(os.Stderr, "removing save %d from %s\n", i+1, s.Stamp.Format(timeFmt))
+		}
+		err = os.Remove(s.Path)
+		if err != nil {
+			break
+		}
+		n++
+	}
+	copy(g.Saves[from:], g.Saves[i:])
+	for k, n := len(g.Saves)-i+from, len(g.Saves); k < n; k++ {
+		g.Saves[k] = nil
+	}
+	g.Saves = g.Saves[:len(g.Saves)-i+from]
+	return n, err
+}
+
 func (g *Game) Backup() (sv *Save, err error) {
 	fi, err := os.Stat(g.Path)
 	if err != nil {
@@ -162,7 +190,7 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 			return nil, err
 		}
 		defer o.Close()
-		fmt.Println("Restoring save from", sv.Stamp.Format(timeFmt), "...")
+		fmt.Println("Restoring save from", sv.Path, "...")
 		if flagVerbose {
 			fmt.Fprintf(os.Stderr, "copying %s to %s\n", sv.Path, g.Path)
 		}

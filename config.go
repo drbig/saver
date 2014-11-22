@@ -38,9 +38,6 @@ func (c *Config) GetGame(name string) *Game {
 }
 
 func (c *Config) AddGame(name, path string) (gm *Game, err error) {
-	if g := c.GetGame(name); g != nil {
-		return nil, fmt.Errorf(`Game "%s" already exist`, name)
-	}
 	r := filepath.Join(c.Root, name)
 	if _, err = os.Stat(r); os.IsExist(err) {
 		return
@@ -60,6 +57,29 @@ func (c *Config) AddGame(name, path string) (gm *Game, err error) {
 	}
 	c.Games = append(c.Games, gm)
 	return gm, nil
+}
+
+func (c *Config) DelGame(name string) error {
+	var i int
+	var g *Game
+	for i, g = range c.Games {
+		if g.Name == name {
+			break
+		}
+	}
+	if g.Name != name {
+		return fmt.Errorf(`Couldn't find game "%s"`, name)
+	}
+	if flagVerbose {
+		fmt.Fprintln(os.Stderr, "removing all from:", g.Root)
+	}
+	if err := os.RemoveAll(g.Root); err != nil {
+		return err
+	}
+	copy(c.Games[i:], c.Games[i+1:])
+	c.Games[len(c.Games)-1] = nil
+	c.Games = c.Games[:len(c.Games)-1]
+	return nil
 }
 
 func loadConfig(path string) (*Config, error) {
