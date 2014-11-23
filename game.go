@@ -76,7 +76,7 @@ func (g *Game) Backup() (sv *Save, err error) {
 		return nil, err
 	}
 	s := time.Now()
-	p := filepath.Join(g.Root, s.Format(timeFmt))
+	p := filepath.Join(g.Root, s.Format(fileFmt))
 	o, err := os.Create(p)
 	if err != nil {
 		return nil, err
@@ -131,6 +131,7 @@ func (g *Game) Backup() (sv *Save, err error) {
 			if err != nil {
 				return err
 			}
+			rp = filepath.ToSlash(rp)
 			i, err := os.Open(path)
 			if err != nil {
 				return err
@@ -229,7 +230,7 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 			return nil, err
 		}
 		defer i.Close()
-		tp := filepath.Join(g.Path, f.Name)
+		tp := filepath.Join(g.Path, filepath.FromSlash(f.Name))
 		dp := filepath.Dir(tp)
 		err = os.MkdirAll(dp, 0777)
 		if err != nil {
