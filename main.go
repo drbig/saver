@@ -43,28 +43,19 @@ func init() {
 
 func main() {
 	flag.Parse()
-	if flag.NArg() < 1 {
-		flag.Usage()
-		os.Exit(1)
-	}
+	checkArgs(false, 1)
 
 	if flagConfig == "" {
 		fmt.Fprintln(os.Stderr, "Config file path can't be empty")
 		os.Exit(2)
 	}
 	flagConfig, err := filepath.Abs(flagConfig)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Can't resolve config path:", err)
-		os.Exit(3)
-	}
+	dieOnErr("Can't resolve config path", err)
 
 	save := false
 	if _, err := os.Stat(flagConfig); err != nil {
 		r, err := os.Getwd()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Can't get current path:", err)
-			os.Exit(3)
-		}
+		dieOnErr("Can't get current path", err)
 		cfg = &Config{
 			Root:  r,
 			Games: make([]*Game, 0),
@@ -73,66 +64,45 @@ func main() {
 		save = true
 	} else {
 		c, err := loadConfig(flagConfig)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Config load error:", err)
-			os.Exit(3)
-		}
+		dieOnErr("Config load error", err)
 		cfg = c
 	}
 
 	switch flag.Arg(0)[0] {
-	case 'g':
-		if flag.NArg() < 3 {
-			flag.Usage()
-			os.Exit(1)
-		}
+	case 'g': // games command
+		checkArgs(false, 3)
 		g := cfg.GetGame(flag.Arg(1))
 		if g == nil {
 			fmt.Fprintf(os.Stderr, "Game \"%s\" not found\n", flag.Arg(1))
 			os.Exit(1)
 		}
 		switch flag.Arg(2)[0] {
-		case 'l':
+		case 'l': // game list
 			g.PrintWhole()
-		case 'b':
+		case 'b': // game backup
 			sv, err := g.Backup()
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "ERROR:", err)
-				os.Exit(3)
-			}
+			dieOnErr("ERROR", err)
 			g.Stamp = time.Now()
 			if flag.NArg() > 3 {
 				sv.Note = flag.Arg(3)
 			}
 			fmt.Println("Backed up at", sv.Stamp.Format(timeFmt))
 			save = true
-		case 'r':
-			if flag.NArg() != 4 {
-				flag.Usage()
-				os.Exit(1)
-			}
+		case 'r': // game restore
+			checkArgs(true, 4)
 			if len(g.Saves) < 1 {
 				fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
 				os.Exit(1)
 			}
 			i, err := strconv.Atoi(flag.Arg(3))
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Malormed index \"%s\": %s\n", flag.Arg(3), err)
-				os.Exit(1)
-			}
+			dieOnErr(fmt.Sprintf("Malformed index \"%s\"", flag.Arg(3)), err)
 			sv, err := g.Restore(i)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "ERROR:", err)
-				os.Exit(3)
-			}
+			dieOnErr("ERROR", err)
 			g.Stamp = time.Now()
 			fmt.Println("Restored save from", sv.Stamp.Format(timeFmt))
 			save = true
-		case 'd':
-			if flag.NArg() != 4 {
-				flag.Usage()
-				os.Exit(1)
-			}
+		case 'd': // game delete saves
+			checkArgs(true, 4)
 			if len(g.Saves) < 1 {
 				fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
 				os.Exit(1)
@@ -144,15 +114,9 @@ func main() {
 			if err != nil {
 				m := idRange.FindStringSubmatch(flag.Arg(3))
 				f, err = strconv.Atoi(m[1])
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Malformed index/range \"%s\": %s\n", flag.Arg(3), err)
-					os.Exit(3)
-				}
+				dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(3)), err)
 				t, err = strconv.Atoi(m[2])
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Malformed index/range \"%s\": %s\n", flag.Arg(3), err)
-					os.Exit(3)
-				}
+				dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(3)), err)
 			}
 			n, err := g.Delete(f, t)
 			if err != nil {
@@ -164,45 +128,31 @@ func main() {
 			flag.Usage()
 			os.Exit(1)
 		}
-	case 'a':
-		if flag.NArg() != 3 {
-			flag.Usage()
-			os.Exit(1)
-		}
+	case 'a': // add game
+		checkArgs(true, 3)
 		if g := cfg.GetGame(flag.Arg(1)); g != nil {
 			fmt.Fprintf(os.Stderr, "Game \"%s\" already exist\n", flag.Arg(1))
 			os.Exit(1)
 		}
 		p, err := filepath.Abs(flag.Arg(2))
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Can't resolve path:", err)
-			os.Exit(3)
-		}
+		dieOnErr("Can't resolve path", err)
 		gm, err := cfg.AddGame(flag.Arg(1), p)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "ERROR:", err)
-			os.Exit(3)
-		}
+		dieOnErr("ERROR", err)
 		gm.PrintHeader()
 		gm.Print()
 		save = true
-	case 'd':
-		if flag.NArg() != 2 {
-			flag.Usage()
-			os.Exit(1)
-		}
+	case 'd': // delete game
+		checkArgs(true, 2)
 		g := cfg.GetGame(flag.Arg(1))
 		if g == nil {
 			fmt.Fprintf(os.Stderr, "Game \"%s\" not found\n", flag.Arg(1))
 			os.Exit(1)
 		}
-		if err := cfg.DelGame(flag.Arg(1)); err != nil {
-			fmt.Fprintln(os.Stderr, "ERROR:", err)
-			os.Exit(3)
-		}
+		err := cfg.DelGame(flag.Arg(1))
+		dieOnErr("ERROR", err)
 		fmt.Printf("Deleted game \"%s\" and all backed up saves\n", flag.Arg(1))
 		save = true
-	case 'l':
+	case 'l': // list games
 		cfg.PrintWhole()
 	default:
 		flag.Usage()
@@ -210,9 +160,22 @@ func main() {
 	}
 
 	if save {
-		if err := cfg.Save(flagConfig); err != nil {
-			fmt.Fprintln(os.Stderr, "Can't save config:", err)
-			os.Exit(3)
-		}
+		err := cfg.Save(flagConfig)
+		dieOnErr("Can't save config", err)
+	}
+}
+
+func dieOnErr(msg string, err error) {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, msg+":", err)
+		os.Exit(3)
+	}
+}
+
+func checkArgs(exact bool, num int) {
+	if (exact && flag.NArg() != num) ||
+		(!exact && flag.NArg() < num) {
+		flag.Usage()
+		os.Exit(1)
 	}
 }
