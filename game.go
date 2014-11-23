@@ -238,7 +238,9 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 			return nil, err
 		}
 		defer o.Close()
-		fmt.Fprintf(os.Stderr, "decompressing %s\n", f.Name)
+		if flagVerbose {
+			fmt.Fprintf(os.Stderr, "decompressing %s\n", f.Name)
+		}
 		n, err := io.Copy(o, i)
 		if err != nil {
 			if flagVerbose {

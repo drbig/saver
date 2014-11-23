@@ -33,7 +33,7 @@ func init() {
 		fmt.Fprintln(os.Stderr, "  [d]el <name>                        - delete game and all saves")
 		fmt.Fprintln(os.Stderr, "  [l]ist                              - list games")
 		fmt.Fprintln(os.Stderr, "  [g]ame <name> [l]ist                - list saves")
-		fmt.Fprintln(os.Stderr, "  [g]ame <name> [b]backup             - backup current save")
+		fmt.Fprintln(os.Stderr, "  [g]ame <name> [b]backup (note)      - backup current save")
 		fmt.Fprintln(os.Stderr, "  [g]ame <name> [r]estore <id>        - restore given save")
 		fmt.Fprintln(os.Stderr, "  [g]ame <name> [d]elete <id|from-to> - delete given save(s)")
 	}
