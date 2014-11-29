@@ -70,6 +70,9 @@ func (g *Game) Delete(from, to int) (n int, err error) {
 	return n, err
 }
 
+// Backup copies a save file, or zips a save directory.
+// Note that currently proper file closing is depending on total
+// exit of the program on any file operation failure.
 func (g *Game) Backup() (sv *Save, err error) {
 	fi, err := os.Stat(g.Path)
 	if err != nil {
@@ -136,7 +139,6 @@ func (g *Game) Backup() (sv *Save, err error) {
 			if err != nil {
 				return err
 			}
-			defer i.Close()
 			o, err := z.Create(rp)
 			if err != nil {
 				return err
@@ -145,6 +147,7 @@ func (g *Game) Backup() (sv *Save, err error) {
 				fmt.Fprintf(os.Stderr, "compressing %s\n", rp)
 			}
 			_, err = io.Copy(o, i)
+			i.Close()
 			return err
 		})
 		if err != nil {
@@ -162,6 +165,10 @@ func (g *Game) Backup() (sv *Save, err error) {
 	return sv, nil
 }
 
+// Restore removes the current save file or directory, and repopulates
+// it with the data from given backup save file.
+// Note that currently proper file closing is depending on total
+// exit of the program on any file operation failure.
 func (g *Game) Restore(index int) (sv *Save, err error) {
 	var i int
 
@@ -229,7 +236,6 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 		if err != nil {
 			return nil, err
 		}
-		defer i.Close()
 		tp := filepath.Join(g.Path, filepath.FromSlash(f.Name))
 		dp := filepath.Dir(tp)
 		err = os.MkdirAll(dp, 0777)
@@ -240,7 +246,6 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 		if err != nil {
 			return nil, err
 		}
-		defer o.Close()
 		if flagVerbose {
 			fmt.Fprintf(os.Stderr, "decompressing %s\n", f.Name)
 		}
@@ -251,6 +256,8 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 			}
 			return nil, err
 		}
+		o.Close()
+		i.Close()
 		if flagVerbose {
 			fmt.Fprintf(os.Stderr, "ok, copied %d\n", n)
 		}
