@@ -89,7 +89,8 @@ func main() {
 			if flag.NArg() > 3 {
 				sv.Note = flag.Arg(3)
 			}
-			fmt.Println("Backed up at", sv.Stamp.Format(timeFmt))
+			fmt.Printf("%3d ", len(g.Saves))
+			sv.Print()
 			save = true
 		case 'r': // game restore
 			checkArgs(true, 4)
