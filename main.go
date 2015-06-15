@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	VERSION = `0.3`
+	VERSION = `0.5`
 	timeFmt = `2006-01-02 15:04:05`
 	fileFmt = `2006-01-02_150405`
 )
@@ -32,13 +32,20 @@ func init() {
 		fmt.Fprintln(os.Stderr, "Options:")
 		flag.PrintDefaults()
 		fmt.Fprintln(os.Stderr, "\nCommands:")
-		fmt.Fprintln(os.Stderr, "  [a]dd <name> <path>                 - add new game")
-		fmt.Fprintln(os.Stderr, "  [d]el <name>                        - delete game and all saves")
-		fmt.Fprintln(os.Stderr, "  [l]ist                              - list games")
-		fmt.Fprintln(os.Stderr, "  [g]ame <name> [l]ist                - list saves")
-		fmt.Fprintln(os.Stderr, "  [g]ame <name> [b]backup (note)      - backup current save")
-		fmt.Fprintln(os.Stderr, "  [g]ame <name> [r]estore <id|ref>    - restore given save")
-		fmt.Fprintln(os.Stderr, "  [g]ame <name> [d]elete <id|from-to> - delete given save(s)")
+		fmt.Fprintln(os.Stderr, "  [list]                       - list games")
+		fmt.Fprintln(os.Stderr, "  <name> [add] <path>          - add new game")
+		fmt.Fprintln(os.Stderr, "  <name> [kill]                - delete game and all saves")
+		fmt.Fprintln(os.Stderr, "  <name> [l]ist                - list saves")
+		fmt.Fprintln(os.Stderr, "  <name> [b]ackup (note)       - backup current save")
+		fmt.Fprintln(os.Stderr, "  <name> [r]estore <id|ref>    - restore given save")
+		fmt.Fprintln(os.Stderr, "  <name> [del]ete <id|from-to> - delete given save(s)")
+		fmt.Fprintln(os.Stderr, "\nWhere:")
+		fmt.Fprintln(os.Stderr, "  name     - arbitrary name used to identify a game/character/world etc.")
+		fmt.Fprintln(os.Stderr, "  path     - absolute path to save file/directory")
+		fmt.Fprintln(os.Stderr, "  note     - optional quoted note, e.g. \"haven't died yet\"")
+		fmt.Fprintln(os.Stderr, "  id       - particular save id")
+		fmt.Fprintln(os.Stderr, "  from-to  - inclusive range of save ids")
+		fmt.Fprintln(os.Stderr, "  ref      - nonpositive offset from the latest save, e.g. -1 is the save before the latest")
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
@@ -71,96 +78,97 @@ func main() {
 		cfg = c
 	}
 
-	switch flag.Arg(0)[0] {
-	case 'g': // games command
-		checkArgs(false, 3)
-		g := cfg.GetGame(flag.Arg(1))
-		if g == nil {
-			fmt.Fprintf(os.Stderr, "Game \"%s\" not found\n", flag.Arg(1))
-			os.Exit(1)
-		}
-		switch flag.Arg(2)[0] {
-		case 'l': // game list
-			g.PrintWhole()
-		case 'b': // game backup
-			sv, err := g.Backup()
-			dieOnErr("ERROR", err)
-			g.Stamp = time.Now()
-			if flag.NArg() > 3 {
-				sv.Note = flag.Arg(3)
-			}
-			fmt.Printf("%3d ", len(g.Saves))
-			sv.Print()
-			save = true
-		case 'r': // game restore
-			checkArgs(true, 4)
-			if len(g.Saves) < 1 {
-				fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
-				os.Exit(1)
-			}
-			i, err := strconv.Atoi(flag.Arg(3))
-			dieOnErr(fmt.Sprintf("Malformed index \"%s\"", flag.Arg(3)), err)
-			sv, err := g.Restore(i)
-			dieOnErr("ERROR", err)
-			g.Stamp = time.Now()
-			fmt.Println("Restored save from", sv.Stamp.Format(timeFmt))
-			save = true
-		case 'd': // game delete saves
-			checkArgs(true, 4)
-			if len(g.Saves) < 1 {
-				fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
-				os.Exit(1)
-			}
-			var err error
-			var f, t int
-			f, err = strconv.Atoi(flag.Arg(3))
-			t = f
-			if err != nil {
-				m := idRange.FindStringSubmatch(flag.Arg(3))
-				f, err = strconv.Atoi(m[1])
-				dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(3)), err)
-				t, err = strconv.Atoi(m[2])
-				dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(3)), err)
-			}
-			n, err := g.Delete(f, t)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "ERROR:", err)
-			}
-			fmt.Printf("Deleted %d save(s)\n", n)
-			save = true
-		default:
-			flag.Usage()
-			os.Exit(1)
-		}
-	case 'a': // add game
-		checkArgs(true, 3)
-		if g := cfg.GetGame(flag.Arg(1)); g != nil {
-			fmt.Fprintf(os.Stderr, "Game \"%s\" already exist\n", flag.Arg(1))
-			os.Exit(1)
-		}
-		p, err := filepath.Abs(flag.Arg(2))
-		dieOnErr("Can't resolve path", err)
-		gm, err := cfg.AddGame(flag.Arg(1), p)
-		dieOnErr("ERROR", err)
-		gm.PrintHeader()
-		gm.Print()
-		save = true
-	case 'd': // delete game
-		checkArgs(true, 2)
-		g := cfg.GetGame(flag.Arg(1))
-		if g == nil {
-			fmt.Fprintf(os.Stderr, "Game \"%s\" not found\n", flag.Arg(1))
-			os.Exit(1)
-		}
-		err := cfg.DelGame(flag.Arg(1))
-		dieOnErr("ERROR", err)
-		fmt.Printf("Deleted game \"%s\" and all backed up saves\n", flag.Arg(1))
-		save = true
-	case 'l': // list games
+	if flag.Arg(0) == "list" {
+		// list games
 		cfg.PrintWhole()
-	default:
-		flag.Usage()
-		os.Exit(1)
+	} else {
+		// per-game commands
+		checkArgs(false, 2)
+		game := flag.Arg(0)
+		if flag.Arg(1) == "add" {
+			// add a new game
+			checkArgs(true, 3)
+			if g := cfg.GetGame(game); g != nil {
+				fmt.Fprintf(os.Stderr, "Game \"%s\" already exist\n", game)
+				os.Exit(1)
+			}
+			p, err := filepath.Abs(flag.Arg(2))
+			dieOnErr("Can't resolve path", err)
+			gm, err := cfg.AddGame(game, p)
+			dieOnErr("ERROR", err)
+			gm.PrintHeader()
+			gm.Print()
+			save = true
+		} else {
+			g := cfg.GetGame(game)
+			if g == nil {
+				fmt.Fprintf(os.Stderr, "Game \"%s\" not found\n", game)
+				os.Exit(1)
+			}
+			switch flag.Arg(1) {
+			case "l", "list":
+				// list game saves
+				g.PrintWhole()
+			case "kill":
+				// remove game and all saves
+				err := cfg.DelGame(game)
+				dieOnErr("ERROR", err)
+				fmt.Printf("Deleted game \"%s\" and all backed up saves\n", game)
+				save = true
+			case "b", "backup":
+				// backup current save
+				sv, err := g.Backup()
+				dieOnErr("ERROR", err)
+				g.Stamp = time.Now()
+				if flag.NArg() > 2 {
+					sv.Note = flag.Arg(2)
+				}
+				fmt.Printf("%3d ", len(g.Saves))
+				sv.Print()
+				save = true
+			case "r", "restore":
+				// restore selected save
+				checkArgs(true, 3)
+				if len(g.Saves) < 1 {
+					fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
+					os.Exit(1)
+				}
+				i, err := strconv.Atoi(flag.Arg(2))
+				dieOnErr(fmt.Sprintf("Malformed index \"%s\"", flag.Arg(2)), err)
+				sv, err := g.Restore(i)
+				dieOnErr("ERROR", err)
+				g.Stamp = time.Now()
+				fmt.Println("Restored save from", sv.Stamp.Format(timeFmt))
+				save = true
+			case "del", "delete":
+				// delete save(s)
+				checkArgs(true, 3)
+				if len(g.Saves) < 1 {
+					fmt.Fprintf(os.Stderr, "Game \"%s\" has no saves backed up\n", g.Name)
+					os.Exit(1)
+				}
+				var err error
+				var f, t int
+				f, err = strconv.Atoi(flag.Arg(2))
+				t = f
+				if err != nil {
+					m := idRange.FindStringSubmatch(flag.Arg(2))
+					f, err = strconv.Atoi(m[1])
+					dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(2)), err)
+					t, err = strconv.Atoi(m[2])
+					dieOnErr(fmt.Sprintf("Malformed index/range \"%s\"", flag.Arg(2)), err)
+				}
+				n, err := g.Delete(f, t)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "ERROR:", err)
+				}
+				fmt.Printf("Deleted %d save(s)\n", n)
+				save = true
+			default:
+				flag.Usage()
+				os.Exit(1)
+			}
+		}
 	}
 
 	if save {
