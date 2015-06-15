@@ -139,6 +139,9 @@ func main() {
 				dieOnErr("ERROR", err)
 				g.Stamp = time.Now()
 				fmt.Println("Restored save from", sv.Stamp.Format(timeFmt))
+				if sv.Note != "" {
+					fmt.Println("Save note:", sv.Note)
+				}
 				save = true
 			case "del", "delete":
 				// delete save(s)
