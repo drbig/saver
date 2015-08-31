@@ -1,3 +1,3 @@
 bin/*
-!bin/md5
+!bin/*.md5
 saver
