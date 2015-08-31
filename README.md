@@ -82,9 +82,11 @@ Restoring save directory from 2014-11-23 16:46:04 ...
 Restored save from 2014-11-23 16:46:04
 ```
 
-## Builds
+## Binaries
 
-Building from source is just one `go build` away. I removed the binary builds for now, but feel free to distribute them (as long as you include and comply with the license).
+Binaries are back! This time for more platform-arch combinations thanks to the awesomeness of Go 1.5. The binaries are distributed outside of the repo, but md5 checksums are kept here for some notion of "authenticity".
+
+Building on your platform is as simple as `go build`, and cross-compiling is as simple as `make` (assuming you have Go 1.5 or newer).
 
 ## Usage notes
 
