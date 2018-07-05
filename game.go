@@ -24,7 +24,7 @@ func (g *Game) PrintHeader() {
 }
 
 func (g *Game) Print() {
-	fmt.Printf("%-32s %-3d %24s\n", g.Name, len(g.Saves), g.Stamp.Format(timeFmt))
+	fmt.Printf("%-32s %-9d %24s\n", g.Name, len(g.Saves), g.Stamp.Format(timeFmt))
 }
 
 func (g *Game) PrintWhole() {
