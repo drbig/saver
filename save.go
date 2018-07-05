@@ -14,7 +14,7 @@ type Save struct {
 }
 
 func (s *Save) PrintHeader() {
-	fmt.Printf("%24s %s\n", "Last mod", "Note")
+	fmt.Printf("%24s %s\n", "Last backup", "Note")
 }
 
 func (s *Save) Print() {
