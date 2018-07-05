@@ -13,9 +13,9 @@ Features:
 ## Showcase
 
 ```bash
-$ ./saver
+$ ./bin/saver-linux-amd64-0.6
 Usage: ./saver (options...) <command>
-saver v0.5 by Piotr S. Staszewski, see LICENSE.txt
+saver v0.6 by Piotr S. Staszewski, see LICENSE.txt
 
 Options:
   -c="saver.json": path to config file
@@ -42,42 +42,37 @@ Where:
 - - -
 
 ```bash
-$ ./saver list
-  # Name                             Len                 Last mod
-  1 dcss-mifi                        15       2014-11-23 20:00:58
-  2 nh-pri                           1        2014-11-23 14:00:15
-  3 cata-stateline                   1        2014-11-23 14:40:04
+$ ./bin/saver-linux-amd64-0.6 list
+  # Name                             # Backups              Last backup
+  1 cata-gruver                      1              2014-11-29 12:37:39
+  2 cata-marty                       1              2014-12-20 22:56:42
+  3 urw-tut                          1              2015-02-24 19:12:21
+  4 df-2015                          1              2015-06-15 17:27:48
+  5 urw-legacy                       1              2015-04-24 15:23:58
+  6 urw-helena                       1              2015-05-04 16:07:48
+  7 urw-kamputuuri                   1              2015-07-04 11:10:31
+  8 urw-xena                         1              2015-06-27 00:13:12
+  9 cata-richlawn                    1              2015-09-05 00:54:17
+ 10 cata-morrill                     1              2015-09-17 23:09:37
+ 11 ds                               1              2015-12-09 22:49:24
 ```
 
 - - -
 
 ```bash
-$ ./saver dcss-mifi l
-Name                             Len                 Last mod
-dcss-mifi                        15       2014-11-23 20:00:58
+$ ./bin/saver-linux-amd64-0.6 cata-gruver l
+Name                             # Backups              Last backup
+cata-gruver                      1              2014-11-29 12:37:39
 
- ID                 Last mod Note
-  1      2014-11-23 11:56:57 
-  2      2014-11-23 12:16:38 
-  3      2014-11-23 12:32:56 
-  4      2014-11-23 12:45:36 
-  5      2014-11-23 13:05:57 
-  6      2014-11-23 13:10:58 
-  7      2014-11-23 13:25:28 
-  8      2014-11-23 13:39:21 
-  9      2014-11-23 13:43:58 
- 10      2014-11-23 13:46:32 
- 11      2014-11-23 16:21:15 
- 12      2014-11-23 16:23:14 Lair:7 clean
- 13      2014-11-23 16:41:18 
- 14      2014-11-23 16:46:04 Lair:8 clear
- 15      2014-11-23 20:00:57 
+ ID              Last backup Note
+  1      2014-11-29 12:20:18 before sleep, for debug
+
 ```
 
 - - -
 
 ```bash
-$ ./saver dcss-mifi r -1
+$ ./bin/saver-linux-amd64-0.6 dcss-mifi r -1
 Restoring save directory from 2014-11-23 16:46:04 ...
 Restored save from 2014-11-23 16:46:04
 ```
