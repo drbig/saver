@@ -83,6 +83,8 @@ Binaries are back! This time for more platform-arch combinations thanks to the a
 
 Building on your platform is as simple as `go build`, and cross-compiling is as simple as `make` (assuming you have Go 1.5 or newer).
 
+And now the [binaries link is public](https://insomniac.pl/~drbig/binaries/). Apply caution please!
+
 ## Usage notes
 
 Copy the binary wherever you want and run it from command line (for Windows folks that's via `cmd.exe`). By default the directory where the binary resides will also be the directory where the config/db file is saved and where the game directories will be made.
