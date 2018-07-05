@@ -1,6 +1,7 @@
 OSES  := linux darwin windows
 ARCHS := amd64 386
 SRCS  := $(wildcard *.go)
+VER   := $(shell grep -Eo 'VERSION = `(.*)`' main.go | cut -d'`' -f2)
 TGTS  := $(foreach os,$(OSES),$(foreach arch,$(ARCHS),bin/saver-$(os)-$(arch)))
 
 .PHONY: clean
@@ -11,7 +12,7 @@ clean:
 	@rm -f bin/*
 
 $(TGTS): $(SRCS)
-	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$@)) go build -o $@ .
+	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$@)) go build -o $@-$(VER) .
 
 $(SRCS):
 
