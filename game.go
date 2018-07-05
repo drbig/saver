@@ -20,7 +20,7 @@ type Game struct {
 }
 
 func (g *Game) PrintHeader() {
-	fmt.Printf("%-32s %-3s %24s\n", "Name", "Len", "Last backup")
+	fmt.Printf("%-32s %-9s %24s\n", "Name", "# Backups", "Last backup")
 }
 
 func (g *Game) Print() {
