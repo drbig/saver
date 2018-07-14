@@ -2,6 +2,8 @@
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 
+**Got back to it. Doing versions. Please look at checksums and read README.**
+
 Features:
 
 - Handle single file and directory saves
