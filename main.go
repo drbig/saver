@@ -39,6 +39,7 @@ func init() {
 		fmt.Fprintln(os.Stderr, "  <name> [b]ackup (note)       - backup current save")
 		fmt.Fprintln(os.Stderr, "  <name> [r]estore <id|ref>    - restore given save")
 		fmt.Fprintln(os.Stderr, "  <name> [del]ete <id|from-to> - delete given save(s)")
+		fmt.Fprintln(os.Stderr, "  [migrate]                    - migrate config, if needed")
 		fmt.Fprintln(os.Stderr, "\nWhere:")
 		fmt.Fprintln(os.Stderr, "  name     - arbitrary name used to identify a game/character/world etc.")
 		fmt.Fprintln(os.Stderr, "  path     - absolute path to save file/directory")
@@ -78,10 +79,14 @@ func main() {
 		cfg = c
 	}
 
-	if flag.Arg(0) == "list" {
+	switch flag.Arg(0) {
+	case "list":
 		// list games
 		cfg.PrintWhole()
-	} else {
+	case "migrate":
+		cfg.Migrate()
+		save = true
+	default:
 		// per-game commands
 		checkArgs(false, 2)
 		game := flag.Arg(0)
