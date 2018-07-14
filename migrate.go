@@ -7,8 +7,12 @@ import (
 	"os"
 )
 
+const (
+	CFG_VER_1 = iota + 1
+)
+
 func (c *Config) Migrate() error {
-	if c.Version < 1 {
+	if c.Version < CFG_VER_1 {
 		fmt.Println("Migrating -> 1")
 		for _, g := range c.Games {
 			fmt.Print("g")
@@ -27,6 +31,7 @@ func (c *Config) Migrate() error {
 				g.Size += size
 			}
 		}
+		c.Version = CFG_VER_1
 		fmt.Println("")
 	}
 	return nil
