@@ -47,7 +47,7 @@ func (g *Game) Delete(from, to int) (n int, err error) {
 		return n, fmt.Errorf("Index from %d out of range", from)
 	}
 	if to > len(g.Saves) {
-		return n, fmt.Errorf("Index to %d out of range", from)
+		return n, fmt.Errorf("Index to %d out of range", to)
 	}
 	from--
 	i := from
