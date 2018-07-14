@@ -11,20 +11,25 @@ import (
 	"time"
 )
 
+import (
+	"code.cloudfoundry.org/bytefmt"
+)
+
 type Game struct {
 	Name  string    // user-given mnemonic, also used for making save storage directory
 	Path  string    // absolute path to the source save file/directory
 	Root  string    // absolute path to the saved saves directory
 	Stamp time.Time // last modification datetime stamp
 	Saves []*Save   // slice of saves
+	Size  uint64    `json:Size,omitempty` // total size of all saves, MINVER:1
 }
 
 func (g *Game) PrintHeader() {
-	fmt.Printf("%-32s %-9s %24s\n", "Name", "# Backups", "Last backup")
+	fmt.Printf("%-32s %-9s %24s %8s\n", "Name", "# Backups", "Last backup", "Size")
 }
 
 func (g *Game) Print() {
-	fmt.Printf("%-32s %-9d %24s\n", g.Name, len(g.Saves), g.Stamp.Format(timeFmt))
+	fmt.Printf("%-32s %-9d %24s %8s\n", g.Name, len(g.Saves), g.Stamp.Format(timeFmt), bytefmt.ByteSize(g.Size))
 }
 
 func (g *Game) PrintWhole() {
@@ -60,6 +65,7 @@ func (g *Game) Delete(from, to int) (n int, err error) {
 		if err != nil {
 			break
 		}
+		g.Size -= s.Size
 		n++
 	}
 	copy(g.Saves[from:], g.Saves[i:])
@@ -157,11 +163,18 @@ func (g *Game) Backup() (sv *Save, err error) {
 			return nil, err
 		}
 	}
+	si, err := o.Stat()
+	if err != nil {
+		return nil, err
+	}
+	size := uint64(si.Size())
 	sv = &Save{
 		Stamp: s,
 		Path:  p,
+		Size:  size,
 	}
 	g.Saves = append(g.Saves, sv)
+	g.Size += size
 	return sv, nil
 }
 

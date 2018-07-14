@@ -11,15 +11,23 @@ import (
 	"time"
 )
 
+const (
+	CFG_VER = 1
+)
+
 type Config struct {
-	Root  string  // absolute path for game directories
-	Games []*Game // slice of games
+	Root    string  // absolute path for game directories
+	Games   []*Game // slice of games
+	Version int     `json:Version,omitempty` // config format version
 }
 
 func (c *Config) PrintWhole() {
 	if len(c.Games) < 1 {
 		fmt.Println("No games defined")
 		return
+	}
+	if flagVerbose {
+		fmt.Printf("Config version: %d\n\n", c.Version)
 	}
 	fmt.Printf("%3s ", "#")
 	c.Games[0].PrintHeader()
@@ -84,6 +92,17 @@ func (c *Config) DelGame(name string) error {
 	return nil
 }
 
+func (c *Config) CheckVer(min_ver int, print bool) bool {
+	if c.Version >= min_ver {
+		return true
+	}
+
+	if print {
+		fmt.Fprintf(os.Stderr, "using old config format, please [migrate] (%d changes(s) behind)\n", CFG_VER-c.Version)
+	}
+	return false
+}
+
 func loadConfig(path string) (*Config, error) {
 	if flagVerbose {
 		fmt.Fprintln(os.Stderr, "loading config from", path)
@@ -101,6 +120,8 @@ func loadConfig(path string) (*Config, error) {
 	if err := json.Unmarshal(d, &c); err != nil {
 		return nil, err
 	}
+	c.CheckVer(CFG_VER, flagVerbose)
+
 	return c, nil
 }
 
