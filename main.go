@@ -84,7 +84,8 @@ func main() {
 		// list games
 		cfg.PrintWhole()
 	case "migrate":
-		cfg.Migrate()
+		err := cfg.Migrate()
+		dieOnErr("ERROR", err)
 		save = true
 	default:
 		// per-game commands
