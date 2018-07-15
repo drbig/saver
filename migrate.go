@@ -34,5 +34,6 @@ func (c *Config) Migrate() error {
 		c.Version = CFG_VER_1
 		fmt.Println("")
 	}
+	fmt.Println("All done")
 	return nil
 }
