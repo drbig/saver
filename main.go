@@ -27,26 +27,29 @@ var (
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s (options...) <command>\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "saver v%s by Piotr S. Staszewski, see LICENSE.txt\n\n", VERSION)
-		fmt.Fprintln(os.Stderr, "Options:")
+		fmt.Fprintf(os.Stderr, `Usage: %s (options...) <command>
+saver v%s by Piotr S. Staszewski, see LICENSE.txt
+
+Options:
+`, os.Args[0], VERSION)
 		flag.PrintDefaults()
-		fmt.Fprintln(os.Stderr, "\nCommands:")
-		fmt.Fprintln(os.Stderr, "  [list]                       - list games")
-		fmt.Fprintln(os.Stderr, "  <name> [add] <path>          - add new game")
-		fmt.Fprintln(os.Stderr, "  <name> [kill]                - delete game and all saves")
-		fmt.Fprintln(os.Stderr, "  <name> [l]ist                - list saves")
-		fmt.Fprintln(os.Stderr, "  <name> [b]ackup (note)       - backup current save")
-		fmt.Fprintln(os.Stderr, "  <name> [r]estore <id|ref>    - restore given save")
-		fmt.Fprintln(os.Stderr, "  <name> [del]ete <id|from-to> - delete given save(s)")
-		fmt.Fprintln(os.Stderr, "  [migrate]                    - migrate config, if needed")
-		fmt.Fprintln(os.Stderr, "\nWhere:")
-		fmt.Fprintln(os.Stderr, "  name     - arbitrary name used to identify a game/character/world etc.")
-		fmt.Fprintln(os.Stderr, "  path     - absolute path to save file/directory")
-		fmt.Fprintln(os.Stderr, "  note     - optional quoted note, e.g. \"haven't died yet\"")
-		fmt.Fprintln(os.Stderr, "  id       - particular save id")
-		fmt.Fprintln(os.Stderr, "  from-to  - inclusive range of save ids")
-		fmt.Fprintln(os.Stderr, "  ref      - nonpositive offset from the latest save, e.g. -1 is the save before the latest")
+		fmt.Fprintln(os.Stderr, `
+Commands:
+  [list]                       - list games
+  <name> [add] <path>          - add new game
+  <name> [kill]                - delete game and all saves
+  <name> [b]ackup (note)       - backup current save
+  <name> [r]estore <id|ref>    - restore given save
+  <name> [del]ete <id|from-to> - delete given save(s)
+  [migrate]                    - migrate config, if needed
+
+Where:
+  name     - arbitrary name used to identify a game/character/world etc.
+  path     - absolute path to save file/directory
+  note     - optional quoted note, e.g. "haven't died yet"
+  id       - particular save id
+  from-to  - inclusive range of save ids
+  ref      - nonpositive offset from the latest save, e.g. -1 is the save before the latest`)
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
