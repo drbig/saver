@@ -18,6 +18,8 @@ const (
 	fileFmt = `2006-01-02_150405`
 )
 
+var build = `UNKNOWN` // injected in Makefile
+
 var (
 	flagConfig  string
 	flagVerbose bool
@@ -29,9 +31,10 @@ func init() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, `Usage: %s (options...) <command>
 saver v%s by Piotr S. Staszewski, see LICENSE.txt
+binary build by %s
 
 Options:
-`, os.Args[0], VERSION)
+`, os.Args[0], VERSION, build)
 		flag.PrintDefaults()
 		fmt.Fprintln(os.Stderr, `
 Commands:
