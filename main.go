@@ -40,10 +40,11 @@ Options:
 Commands:
   [list]                       - list games
   <name> [add] <path>          - add new game
-  <name> [kill]                - delete game and all saves
   <name> [b]ackup (note)       - backup current save
+  <name> [l]ist                - list saves
   <name> [r]estore <id|ref>    - restore given save
   <name> [del]ete <id|from-to> - delete given save(s)
+  <name> [kill]                - delete game and all saves
   [migrate]                    - migrate config, if needed
 
 Where:
