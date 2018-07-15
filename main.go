@@ -49,7 +49,7 @@ Where:
   note     - optional quoted note, e.g. "haven't died yet"
   id       - particular save id
   from-to  - inclusive range of save ids
-  ref      - nonpositive offset from the latest save, e.g. -1 is the save before the latest`)
+  ref      - non-positive offset from the latest save, e.g. -1 is the save before the latest`)
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
