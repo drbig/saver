@@ -12,7 +12,7 @@ clean:
 	@rm -f bin/*
 
 dev: $(SRCS)
-	GOOS=linux GOARCH=amd64 go build -o saver-$@-$(VER)-dev .
+	GOOS=linux GOARCH=amd64 go build -o saver-$@-$(VER) .
 
 $(TGTS): $(SRCS)
 	GOOS=$(word 2,$(subst -, ,$@)) GOARCH=$(word 3,$(subst -, ,$@)) go build -o $@-$(VER) .
