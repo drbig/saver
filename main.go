@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	VERSION = `0.7`
+	VERSION = `0.8`
 	timeFmt = `2006-01-02 15:04:05`
 	fileFmt = `2006-01-02_150405`
 )
