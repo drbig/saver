@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	CFG_VER = 1
+	CFG_VER = CFG_VER_1
 )
 
 type Config struct {
