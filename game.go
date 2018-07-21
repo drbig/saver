@@ -54,13 +54,15 @@ func (g *Game) Delete(from, to int) (n int, err error) {
 	if to > len(g.Saves) {
 		return n, fmt.Errorf("Index to %d out of range", to)
 	}
+	spinner.Msg("Deleting saves...")
 	from--
 	i := from
 	for ; i < to; i++ {
 		s := g.Saves[i]
 		if flagVerbose {
-			fmt.Fprintf(os.Stderr, "removing save %d from %s\n", i+1, s.Stamp.Format(timeFmt))
+			spinner.Msg(fmt.Sprintf("removing save %d from %s", i+1, s.Stamp.Format(timeFmt)))
 		}
+		spinner.Tick()
 		err = os.Remove(s.Path)
 		if err != nil {
 			break
@@ -68,6 +70,7 @@ func (g *Game) Delete(from, to int) (n int, err error) {
 		g.Size -= s.Size
 		n++
 	}
+	spinner.Finish()
 	copy(g.Saves[from:], g.Saves[i:])
 	for k, n := len(g.Saves)-i+from, len(g.Saves); k < n; k++ {
 		g.Saves[k] = nil
