@@ -142,26 +142,26 @@ func (c *Config) Save(path string) error {
 
 func (c *Config) Migrate() error {
 	if c.Version < CFG_VER_1 {
-		fmt.Println("Migrating -> 1")
+		spinner.Msg("Migrating -> 1")
 		for _, g := range c.Games {
-			fmt.Print("g")
+			spinner.Tick()
 			for _, s := range g.Saves {
 				if s.Size > 0 {
-					fmt.Print("S")
+					spinner.Tick()
 					continue
 				}
 				i, err := os.Stat(s.Path)
 				if err != nil {
 					return err
 				}
-				fmt.Print("s")
+				spinner.Tick()
 				size := uint64(i.Size())
 				s.Size = size
 				g.Size += size
 			}
 		}
 		c.Version = CFG_VER_1
-		fmt.Println("")
+		spinner.Finish()
 	}
 	fmt.Println("All done")
 	return nil
