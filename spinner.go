@@ -39,6 +39,7 @@ func (s *Spinner) Tick() {
 }
 
 func (s *Spinner) Finish() {
+	s.Msg("All done")
 	fmt.Println()
 	s.running = false
 	s.msg = ""
