@@ -15,7 +15,7 @@ var (
 type Spinner struct {
 	running  bool   // indiacte we're actually printing
 	msg      string // current message
-	pos      int    // position in SPINNER_RUNES
+	pos      int    // position in SPINNER_STRINGS
 	last_len int    // total length of last status
 }
 
