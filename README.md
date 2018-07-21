@@ -2,7 +2,7 @@
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 
-**Now at version 0.8**
+**Now at version 0.9** I'll be updating the examples here only on user-significant changes (so the 0.9 spinner thing doesn't count).
 
 Features:
 
@@ -11,7 +11,8 @@ Features:
 - Option to annotate saves
 - No dependencies, single binary
 - Tested on Linux and Windows (i386/amd64)
-- Now also keeps track of space usage (and you will use space)
+- Keeps track of space usage (and you will use space)
+- Has a spinner thingy so you can see it ain't dead
 - Minor bugfixes and improvements since the version from 2014
 
 ## Showcase
