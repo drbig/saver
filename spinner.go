@@ -19,12 +19,9 @@ type Spinner struct {
 	last_len int    // total length of last status
 }
 
-func (s *Spinner) Finish() {
-	fmt.Println()
-	s.running = false
-	s.msg = ""
-	s.pos = 0
-	s.last_len = 0
+func (s *Spinner) Msg(msg string) {
+	s.msg = msg
+	s.Tick()
 }
 
 func (s *Spinner) Tick() {
@@ -41,7 +38,10 @@ func (s *Spinner) Tick() {
 	s.last_len = 2 + len(s.msg)
 }
 
-func (s *Spinner) Msg(msg string) {
-	s.msg = msg
-	s.Tick()
+func (s *Spinner) Finish() {
+	fmt.Println()
+	s.running = false
+	s.msg = ""
+	s.pos = 0
+	s.last_len = 0
 }
