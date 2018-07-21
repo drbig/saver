@@ -91,6 +91,7 @@ func main() {
 		// list games
 		cfg.PrintWhole()
 	case "migrate":
+		// migrate config to latest version
 		err := cfg.Migrate()
 		dieOnErr("ERROR", err)
 		save = true
