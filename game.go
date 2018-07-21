@@ -121,9 +121,9 @@ func (g *Game) Backup() (sv *Save, err error) {
 		}
 	} else {
 		// directory
-		fmt.Println("Backing up save directory...")
+		spinner.Msg("Backing up save directory...")
 		if flagVerbose {
-			fmt.Fprintf(os.Stderr, "zipping %s to %s\n", g.Path, p)
+			spinner.Msg(fmt.Sprintf("zipping %s to %s", g.Path, p))
 		}
 		z := zip.NewWriter(o)
 		err = filepath.Walk(g.Path, func(path string, info os.FileInfo, ierr error) (err error) {
@@ -132,7 +132,7 @@ func (g *Game) Backup() (sv *Save, err error) {
 			}
 			if info.IsDir() {
 				if flagVerbose {
-					fmt.Fprintf(os.Stderr, "skipping %s\n", path)
+					spinner.Msg(fmt.Sprintf("skipping %s", path))
 				}
 				return nil
 			}
@@ -150,12 +150,14 @@ func (g *Game) Backup() (sv *Save, err error) {
 				return err
 			}
 			if flagVerbose {
-				fmt.Fprintf(os.Stderr, "compressing %s\n", rp)
+				spinner.Msg(fmt.Sprintf("compressing %s", rp))
 			}
+			spinner.Tick()
 			_, err = io.Copy(o, i)
 			i.Close()
 			return err
 		})
+		spinner.Finish()
 		if err != nil {
 			return nil, err
 		}

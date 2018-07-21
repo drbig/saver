@@ -25,6 +25,7 @@ var (
 	flagVerbose bool
 	cfg         *Config
 	idRange     = regexp.MustCompile(`(\d+)-(\d+)`)
+	spinner     = Spinner{}
 )
 
 func init() {
