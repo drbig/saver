@@ -30,12 +30,8 @@ func (s *Spinner) Tick() {
 	} else {
 		s.running = true
 	}
-
-	fmt.Print(SPINNER_STRINGS[s.pos])
-	fmt.Print(s.msg)
-
+	s.last_len, _ = fmt.Print(SPINNER_STRINGS[s.pos], s.msg)
 	s.pos = (s.pos + 1) % SPINNER_LEN
-	s.last_len = 2 + len(s.msg)
 }
 
 func (s *Spinner) Finish() {
