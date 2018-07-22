@@ -2,7 +2,7 @@
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 
-**Now at version 0.9** I'll be updating the examples here only on user-significant changes (so the 0.9 spinner thing doesn't count).
+**Now at version 0.9.1** I'll be updating the examples here only on user-significant changes (so the 0.9.1 spinner thing doesn't count).
 
 Features:
 
