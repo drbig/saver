@@ -233,16 +233,16 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 		return sv, nil
 	}
 	// directory
-	fmt.Println("Restoring save directory from", sv.Stamp.Format(timeFmt), "...")
+	spinner.Msg(fmt.Sprint("Restoring save directory from ", sv.Stamp.Format(timeFmt), "..."))
 	if flagVerbose {
-		fmt.Fprintf(os.Stderr, "removing all from %s\n", g.Path)
+		spinner.Msg(fmt.Sprintf("removing all from %s", g.Path))
 	}
 	err = os.RemoveAll(g.Path)
 	if err != nil {
 		return nil, err
 	}
 	if flagVerbose {
-		fmt.Fprintf(os.Stderr, "unzipping %s to %s\n", sv.Path, g.Path)
+		spinner.Msg(fmt.Sprintf("unzipping %s to %s", sv.Path, g.Path))
 	}
 	z, err := zip.OpenReader(sv.Path)
 	if err != nil {
@@ -265,8 +265,9 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 			return nil, err
 		}
 		if flagVerbose {
-			fmt.Fprintf(os.Stderr, "decompressing %s\n", f.Name)
+			spinner.Msg(fmt.Sprintf("decompressing %s", f.Name))
 		}
+		spinner.Tick()
 		n, err := io.Copy(o, i)
 		if err != nil {
 			if flagVerbose {
@@ -277,8 +278,9 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 		o.Close()
 		i.Close()
 		if flagVerbose {
-			fmt.Fprintf(os.Stderr, "ok, copied %d\n", n)
+			spinner.Msg(fmt.Sprintf("ok, copied %d", n))
 		}
 	}
+	spinner.Finish()
 	return sv, nil
 }
