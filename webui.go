@@ -19,9 +19,7 @@ import (
 var webuiLog *log.Logger
 
 func handleGetList(w http.ResponseWriter, r *http.Request) {
-	j := json.NewEncoder(w)
-	w.Header()["Content-Type"] = []string{"application/json"}
-	j.Encode(cfg)
+	outputJSON(w, cfg)
 }
 
 func handleGetGameBackup(w http.ResponseWriter, r *http.Request) {
