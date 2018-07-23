@@ -3,20 +3,9 @@
 
 package main
 
-import (
-	"fmt"
-	"os"
-	"os/signal"
-)
+import "os"
 
 // sigwait processes signals such as a CTRL-C hit.
 func sigwait() {
-	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt, os.Kill)
-	s := <-sig
-	if s == os.Interrupt {
-		fmt.Println()
-	}
-	webuiLog.Printf("Signal '%s' received, stopping", s)
-	return
+	_sigwait(os.Interrupt, os.Kill)
 }
