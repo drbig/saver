@@ -32,17 +32,13 @@ func handleGetGameBackup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Couldn't parse form.", 400)
 		return
 	}
-	note := r.Form.Get("note")
-
 	sv, err := g.Backup()
 	if err != nil {
 		webuiLog.Println("FAILED to save: ", err)
 		http.Error(w, fmt.Sprintln("Failed to save: ", err), 501)
 		return
 	}
-	if note != "" {
-		sv.Note = note
-	}
+	sv.Note = r.Form.Get("note")
 
 	outputJSON(w, sv)
 }
