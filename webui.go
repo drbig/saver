@@ -29,13 +29,13 @@ func handleGetGameBackup(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := r.ParseForm(); err != nil {
 		webuiLog.Println("FAILED to parse form")
-		http.Error(w, "Couldn't parse form.", 400)
+		http.Error(w, "Couldn't parse form.", http.StatusBadRequest)
 		return
 	}
 	sv, err := g.Backup()
 	if err != nil {
 		webuiLog.Println("FAILED to save: ", err)
-		http.Error(w, fmt.Sprintln("Failed to save: ", err), 501)
+		http.Error(w, fmt.Sprintln("Failed to save: ", err), http.StatusInternalServerError)
 		return
 	}
 	sv.Note = r.Form.Get("note")
@@ -53,7 +53,7 @@ func handleGetGameRestore(w http.ResponseWriter, r *http.Request) {
 	sv, err := g.Restore(i)
 	if err != nil {
 		webuiLog.Println("FAILED to restore: ", err)
-		http.Error(w, fmt.Sprintln("Failed to restore: ", err), 501)
+		http.Error(w, fmt.Sprintln("Failed to restore: ", err), http.StatusInternalServerError)
 		return
 	}
 	g.Stamp = time.Now()
@@ -72,7 +72,7 @@ func handleGetGameDelete(w http.ResponseWriter, r *http.Request) {
 	_, err := g.Delete(f, t)
 	if err != nil {
 		webuiLog.Println("FAILED to delete: ", err)
-		http.Error(w, fmt.Sprintln("Failed to delete: ", err), 501)
+		http.Error(w, fmt.Sprintln("Failed to delete: ", err), http.StatusInternalServerError)
 	}
 
 	outputJSON(w, cfg)
