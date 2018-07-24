@@ -61,6 +61,23 @@ func handleGetGameRestore(w http.ResponseWriter, r *http.Request) {
 	outputJSON(w, sv)
 }
 
+func handleGetGameDelete(w http.ResponseWriter, r *http.Request) {
+	g, ok := getGame(w, r)
+	if !ok {
+		return
+	}
+	v := mux.Vars(r)
+	f, _ := strconv.Atoi(v["from"])
+	t, _ := strconv.Atoi(v["to"])
+	_, err := g.Delete(f, t)
+	if err != nil {
+		webuiLog.Println("FAILED to delete: ", err)
+		http.Error(w, fmt.Sprintln("Failed to delete: ", err), 501)
+	}
+
+	outputJSON(w, cfg)
+}
+
 func loggingMw(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		webuiLog.Printf("Request to %s\n", r.RequestURI)
@@ -75,6 +92,7 @@ func startWebUI() {
 	r.HandleFunc("/list", handleGetList).Methods("GET")
 	r.HandleFunc("/{game}/backup", handleGetGameBackup).Methods("GET")
 	r.HandleFunc("/{game}/restore/{id:[0-9]+}", handleGetGameRestore).Methods("GET")
+	r.HandleFunc("/{game}/delete/{from:[0-9]+}-{to:[0-9]+}", handleGetGameDelete).Methods("GET")
 	r.Use(loggingMw)
 	http.Handle("/", r)
 
