@@ -98,6 +98,7 @@ func startWebUI() {
 		Methods(http.MethodGet)
 	api.HandleFunc("/{game}/delete/{from:[0-9]+}-{to:[0-9]+}", handleGetGameDelete).
 		Methods(http.MethodGet)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./js/dist/")))
 	r.Use(loggingMw)
 	http.Handle("/", r)
 
