@@ -89,10 +89,14 @@ func startWebUI() {
 	webuiLog = log.New(os.Stdout, "", log.Ltime|log.Lshortfile)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/list", handleGetList).Methods("GET")
-	r.HandleFunc("/{game}/backup", handleGetGameBackup).Methods("GET")
-	r.HandleFunc("/{game}/restore/{id:[0-9]+}", handleGetGameRestore).Methods("GET")
-	r.HandleFunc("/{game}/delete/{from:[0-9]+}-{to:[0-9]+}", handleGetGameDelete).Methods("GET")
+	r.HandleFunc("/list", handleGetList).
+		Methods(http.MethodGet)
+	r.HandleFunc("/{game}/backup", handleGetGameBackup).
+		Methods(http.MethodGet)
+	r.HandleFunc("/{game}/restore/{id:[0-9]+}", handleGetGameRestore).
+		Methods(http.MethodGet)
+	r.HandleFunc("/{game}/delete/{from:[0-9]+}-{to:[0-9]+}", handleGetGameDelete).
+		Methods(http.MethodGet)
 	r.Use(loggingMw)
 	http.Handle("/", r)
 
