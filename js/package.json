@@ -1,0 +1,43 @@
+{
+  "name": "saver-webui-fe",
+  "version": "0.0.1",
+  "description": "Saver's Web UI frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build-prod": "webpack --config webpack.prod.js",
+    "build-dev": "webpack --config webpack.dev.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drbig/saver.git"
+  },
+  "author": "Piotr S. Staszewski",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/drbig/saver/issues"
+  },
+  "homepage": "https://github.com/drbig/saver#readme",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.3.1",
+    "css-loader": "^1.0.0",
+    "git-revision-webpack-plugin": "^3.0.3",
+    "handlebars": "^4.0.11",
+    "handlebars-loader": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.8.0",
+    "less-loader": "^4.1.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1"
+  }
+}

@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	VERSION = `0.9.1`
+	VERSION = `0.9.1-webui`
 	timeFmt = `2006-01-02 15:04:05`
 	fileFmt = `2006-01-02_150405`
 )
@@ -23,6 +23,7 @@ var build = `UNKNOWN` // injected in Makefile
 var (
 	flagConfig  string
 	flagVerbose bool
+	flagPort    int
 	cfg         *Config
 	idRange     = regexp.MustCompile(`(\d+)-(\d+)`)
 	spinner     = Spinner{}
@@ -47,6 +48,7 @@ Commands:
   <name> [del]ete <id|from-to> - delete given save(s)
   <name> [kill]                - delete game and all saves
   [migrate]                    - migrate config, if needed
+  [webui]                      - start the Web UI
 
 Where:
   name     - arbitrary name used to identify a game/character/world etc.
@@ -58,6 +60,7 @@ Where:
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
+	flag.IntVar(&flagPort, "p", 8888, "Web UI port")
 }
 
 func main() {
@@ -95,6 +98,11 @@ func main() {
 		// migrate config to latest version
 		err := cfg.Migrate()
 		dieOnErr("ERROR", err)
+		save = true
+	case "webui":
+		// start the Web UI
+		go startWebUI()
+		sigwait()
 		save = true
 	default:
 		// per-game commands
