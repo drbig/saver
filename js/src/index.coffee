@@ -3,6 +3,40 @@ import React from 'react'
 import {render} from 'react-dom'
 
 
+class Game extends React.Component
+  constructor: (props) ->
+    super props
+    this.state = {
+      isExpanded: false,
+      isDetailed: false,
+    }
+
+  toggleExpanded: ->
+    this.setState((prevState) => {isExpanded: !prevState.isExpanded})
+
+  toggleDetailed: ->
+    this.setState((prevState) => {isDetailed: !prevState.isDetailed})
+
+  render: ->
+    knob = if this.state.isExpanded
+      '[ - ]'
+    else
+      '[ + ]'
+
+    <li className="game">
+      <a className="knob" onClick={=> this.toggleExpanded()}>{knob}</a>
+      <a className="info" onClick={=> this.toggleDetailed()}>[i]</a>
+      <span className="gameName">{this.props.game.Name}</span>
+      <span className="gameStamp">{this.props.game.Stamp}</span>
+      {if this.state.isDetailed
+        <div className="gameInfo">
+          Path: {this.props.game.Path}
+          Size: {this.props.game.Size}
+          </div>
+      }
+    </li>
+
+
 class App extends React.Component
   constructor: (props) ->
     super props
@@ -10,6 +44,7 @@ class App extends React.Component
       isLoaded: false,
       error: null,
       cfg: {},
+      currentGame: null,
     }
 
   componentDidMount: ->
@@ -31,19 +66,17 @@ class App extends React.Component
 
   render: ->
     if this.state.error
-      <div class="error">Error: {this.state.error.message}</div>
+      <div className="error">Error: {this.state.error.message}</div>
     else if !this.state.isLoaded
       <div>Loading...</div>
     else
       <div>
         Root: {this.state.cfg.Root}
         {if this.state.cfg.Games.length < 1
-          <div class="Error">No games defined. Please use CLI.</div>
+          <div className="Error">No games defined. Please use CLI.</div>
         else
           <ul>
-          {this.state.cfg.Games.map((game) =>
-            <li>{game.Name}</li>
-          )}
+          {this.state.cfg.Games.map((game) => <Game key={game.Name} game={game} />)}
           </ul>
         }
       </div>
