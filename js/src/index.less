@@ -22,8 +22,12 @@ span {
   display: inline-block;
 }
 
-span.gameName {
+a.gameName {
+  display: inline-block;
   width: 32em;
+}
+a.gameName:hover {
+  color: yellow;
 }
 
 span.gameStamp {
@@ -31,24 +35,28 @@ span.gameStamp {
   font-size: 0.8em;
 }
 
-a.knob {
-  display: inline-block;
-  width: 3.5em;
+span.knob {
   font-family: monospace;
+  padding-right: 0.5em;
 }
-a.knob:hover {
-  color: yellow;
+
+span.savesCounter {
+  font-family: monospace;
+  display: inline-block;
+  width: 2em;
+  text-align: center;
+  padding-right: 0.5em;
 }
 
 a.info {
-  display: inline-block;
-  width: 2.5em;
   font-family: monospace;
+  padding-right: 0.5em;
 }
 a.info:hover {
   color: yellow;
 }
 
-li.gameInfo {
+li.saves {
   display: block;
+  padding: 0.5em;
 }

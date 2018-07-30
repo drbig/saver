@@ -23,10 +23,11 @@ class Game extends React.Component
     else
       '[ + ]'
 
-    <li className="game">
-      <a className="knob" onClick={=> this.toggleExpanded()}>{knob}</a>
+    <li className="games">
+      <span className="knob">{knob}</span>
       <a className="info" onClick={=> this.toggleDetailed()}>[i]</a>
-      <span className="gameName">{this.props.game.Name}</span>
+      <span className="savesCounter">({this.props.game.Saves.length})</span>
+      <a className="gameName" onClick={=> this.toggleExpanded()}>{this.props.game.Name}</a>
       <span className="gameStamp">{this.props.game.Stamp}</span>
       {if this.state.isDetailed
         <div className="gameInfo">
