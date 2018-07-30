@@ -3,6 +3,24 @@ import React from 'react'
 import {render} from 'react-dom'
 
 
+class Save extends React.Component
+  constructor: (props) ->
+    super props
+    this.state = {
+      isDetailed: false,
+    }
+
+  toggleDetailed: ->
+    this.setState((prevState) => {isDetailed: !prevState.isDetailed})
+
+  render: ->
+    <li>
+      <a className="knob">[del]</a>
+      <a className="saveMain">{this.props.save.Stamp}</a>
+      <span className="gameStamp">{this.props.save.Note}</span>
+    </li>
+
+
 class Game extends React.Component
   constructor: (props) ->
     super props
@@ -23,7 +41,7 @@ class Game extends React.Component
     else
       '[ + ]'
 
-    <li className="games">
+    <li className="game">
       <span className="knob">{knob}</span>
       <a className="info" onClick={=> this.toggleDetailed()}>[i]</a>
       <span className="savesCounter">({this.props.game.Saves.length})</span>
@@ -34,6 +52,11 @@ class Game extends React.Component
           Path: {this.props.game.Path}
           Size: {this.props.game.Size}
           </div>
+      }
+      {if this.state.isExpanded
+        <ol className="saves">
+        {this.props.game.Saves.map((save) => <Save key={save.Stamp} save={save} />)}
+        </ol>
       }
     </li>
 
@@ -76,7 +99,7 @@ class App extends React.Component
         {if this.state.cfg.Games.length < 1
           <div className="Error">No games defined. Please use CLI.</div>
         else
-          <ul>
+          <ul className="games">
           {this.state.cfg.Games.map((game) => <Game key={game.Name} game={game} />)}
           </ul>
         }
