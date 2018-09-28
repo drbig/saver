@@ -32,6 +32,13 @@ func (g *Game) Print() {
 	fmt.Printf("%-32s %-9d %24s %8s\n", g.Name, len(g.Saves), g.Stamp.Format(timeFmt), bytefmt.ByteSize(g.Size))
 }
 
+func (g *Game) PrintInfo() {
+	fmt.Printf(` Game files in: %s
+Saved stuff in: %s
+Latest save at: %s
+`, g.Path, g.Root, g.Saves[len(g.Saves)-1].Path)
+}
+
 func (g *Game) PrintWhole() {
 	g.PrintHeader()
 	g.Print()

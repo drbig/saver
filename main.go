@@ -45,6 +45,7 @@ Commands:
   <name> [l]ist                - list saves
   <name> [r]estore <id|ref>    - restore given save
   <name> [del]ete <id|from-to> - delete given save(s)
+  <name> [i]nfo                - game info, mostly paths to stuff
   <name> [kill]                - delete game and all saves
   [migrate]                    - migrate config, if needed
 
@@ -124,6 +125,9 @@ func main() {
 			case "l", "list":
 				// list game saves
 				g.PrintWhole()
+			case "i", "info":
+				// print game paths etc.
+				g.PrintInfo()
 			case "kill":
 				// remove game and all saves
 				err := cfg.DelGame(game)
