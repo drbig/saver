@@ -22,6 +22,7 @@ var build = `UNKNOWN` // injected in Makefile
 
 var (
 	flagConfig  string
+	flagShort   bool
 	flagVerbose bool
 	cfg         *Config
 	idRange     = regexp.MustCompile(`(\d+)-(\d+)`)
@@ -58,6 +59,7 @@ Where:
   ref      - non-positive offset from the latest save, e.g. -1 is the save before the latest`)
 	}
 	flag.StringVar(&flagConfig, "c", "saver.json", "path to config file")
+	flag.BoolVar(&flagShort, "s", false, "be short, be scriptful")
 	flag.BoolVar(&flagVerbose, "v", false, "be very verbose")
 }
 
