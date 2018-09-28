@@ -33,10 +33,15 @@ func (g *Game) Print() {
 }
 
 func (g *Game) PrintInfo() {
+	lsp := g.Saves[len(g.Saves)-1].Path
+	if flagShort {
+		fmt.Println(lsp)
+		return
+	}
 	fmt.Printf(` Game files in: %s
 Saved stuff in: %s
 Latest save at: %s
-`, g.Path, g.Root, g.Saves[len(g.Saves)-1].Path)
+`, g.Path, g.Root, lsp)
 }
 
 func (g *Game) PrintWhole() {
