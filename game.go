@@ -296,3 +296,20 @@ func (g *Game) Restore(index int) (sv *Save, err error) {
 	spinner.Finish()
 	return sv, nil
 }
+
+func (g *Game) ChecksumAll() {
+	for i, s := range g.Saves {
+		if flagShort {
+			fmt.Print(s.Path, " ")
+		} else {
+			fmt.Print(i+1, " ", s.Stamp.Format(timeFmt), " ")
+		}
+
+		sum, err := s.Checksum()
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(sum)
+		}
+	}
+}

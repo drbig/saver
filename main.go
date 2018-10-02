@@ -47,6 +47,7 @@ Commands:
   <name> [r]estore <id|ref>    - restore given save
   <name> [del]ete <id|from-to> - delete given save(s)
   <name> [i]nfo                - game info, mostly paths to stuff
+  <name> check[sum]s           - checksum (MD5) all backups
   <name> [kill]                - delete game and all saves
   [migrate]                    - migrate config, if needed
 
@@ -188,6 +189,8 @@ func main() {
 				}
 				fmt.Printf("Deleted %d save(s)\n", n)
 				save = true
+			case "sum", "checksums":
+				g.ChecksumAll()
 			default:
 				flag.Usage()
 				os.Exit(1)
