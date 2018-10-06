@@ -74,7 +74,7 @@ $ ./saver list
 - - -
 
 ```bash
-./saver cata-gruver info
+$ ./saver cata-gruver info
  Game files in: /home/drbig/Projects/cdda-dev/save/Gruver
 Saved stuff in: /home/drbig/Projects/go/src/github.com/drbig/saver/cata-gruver
 Latest save at: /home/drbig/Projects/go/src/github.com/drbig/saver/cata-gruver/2014-11-29_122018
@@ -95,7 +95,7 @@ cata-gruver                      1              2014-11-29 12:37:39    25.6M
 Or if you want to see how much each save takes:
 
 ```bash
-$ ./bin/saver-linux-amd64-0.8 -v cata-gruver l
+$ ./saver -v cata-gruver l
 loading config from /home/drbig/Projects/go/src/github.com/drbig/saver/saver.json
 Name                             # Backups              Last backup     Size
 cata-gruver                      1              2014-11-29 12:37:39    25.6M
@@ -108,7 +108,7 @@ cata-gruver                      1              2014-11-29 12:37:39    25.6M
 - - -
 
 ```bash
-$ ./bin/saver-linux-amd64-0.8 dcss-mifi r -1
+$ ./saver dcss-mifi r -1
 Restoring save directory from 2014-11-23 16:46:04 ...
 Restored save from 2014-11-23 16:46:04
 ```
