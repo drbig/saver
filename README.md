@@ -2,7 +2,7 @@
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 
-**Now at version 0.9.2** I'll be updating the examples here only on user-significant changes (so the 0.9.1 spinner thing doesn't count).
+**Now at version 0.9.3** I'll be updating the examples here only on user-significant changes.
 
 Features:
 
@@ -14,18 +14,21 @@ Features:
 - Keeps track of space usage (and you will use space)
 - Has a spinner thingy so you can see it ain't dead
 - Minor bugfixes and improvements since the version from 2014
+- Can also do MD5 checksums of backups
+- Starting to add shorter/scriptable output modes
 
 ## Showcase
 
 ```bash
-$ ./bin/saver-linux-amd64-0.8
-Usage: ./bin/saver-linux-amd64-0.8 (options...) <command>
-saver v0.8 by Piotr S. Staszewski, see LICENSE.txt
-binary build by drbig@swordfish on Sun 15 Jul 20:15:37 CEST 2018
+$ ./saver
+Usage: ./saver (options...) <command>
+saver v0.9.3 by Piotr S. Staszewski, see LICENSE.txt
+binary build by drbig@swordfish on Sat 6 Oct 18:49:30 CEST 2018
 
 Options:
   -c string
         path to config file (default "saver.json")
+  -s    be short, be scriptful
   -v    be very verbose
 
 Commands:
@@ -35,6 +38,8 @@ Commands:
   <name> [l]ist                - list saves
   <name> [r]estore <id|ref>    - restore given save
   <name> [del]ete <id|from-to> - delete given save(s)
+  <name> [i]nfo                - game info, mostly paths to stuff
+  <name> check[sum]s           - checksum (MD5) all backups
   <name> [kill]                - delete game and all saves
   [migrate]                    - migrate config, if needed
 
@@ -50,7 +55,7 @@ Where:
 - - -
 
 ```bash
-$ ./bin/saver-linux-amd64-0.8 list
+$ ./saver list
   # Name                             # Backups              Last backup     Size
   1 cata-gruver                      1              2014-11-29 12:37:39    25.6M
   2 cata-marty                       1              2014-12-20 22:56:42     2.2M
@@ -69,7 +74,16 @@ $ ./bin/saver-linux-amd64-0.8 list
 - - -
 
 ```bash
-$ ./bin/saver-linux-amd64-0.8 cata-gruver l
+./saver cata-gruver info
+ Game files in: /home/drbig/Projects/cdda-dev/save/Gruver
+Saved stuff in: /home/drbig/Projects/go/src/github.com/drbig/saver/cata-gruver
+Latest save at: /home/drbig/Projects/go/src/github.com/drbig/saver/cata-gruver/2014-11-29_122018
+```
+
+- - -
+
+```bash
+$ ./saver cata-gruver l
 Name                             # Backups              Last backup     Size
 cata-gruver                      1              2014-11-29 12:37:39    25.6M
 
