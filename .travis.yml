@@ -1,5 +1,7 @@
 language: go
 go:
   - "1.12.x"
+install:
+  - go get code.cloudfoundry.org/bytefmt
 script:
   - make test
