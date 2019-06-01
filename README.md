@@ -1,4 +1,4 @@
-# saver
+# saver [![Build Status](https://travis-ci.org/drbig/saver.svg?branch=master)]((https://travis-ci.org/drbig/saver)
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 

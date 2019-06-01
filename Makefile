@@ -6,9 +6,11 @@ TGTS    := $(foreach os,$(OSES),$(foreach arch,$(ARCHS),bin/saver-$(os)-$(arch))
 BUILD   := $(shell echo `whoami`@`hostname -s` on `date`)
 LDFLAGS := -ldflags='-X "main.build=$(BUILD)"'
 
-.PHONY: clean dev
+.PHONY: clean dev test
 
 all: $(TGTS) bin/checksums.md5
+
+test: $(TGTS)
 
 clean:
 	@rm -f bin/*
