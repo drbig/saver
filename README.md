@@ -2,7 +2,7 @@
 
 Saver is a self-contained cross-platform save-scumming/backup utility.
 
-**Now at version 0.9.3** I'll be updating the examples here only on user-significant changes.
+**Now at version 0.9.4** I'll be updating the examples here only on user-significant changes.
 
 Features:
 
@@ -153,4 +153,4 @@ Standard two-clause BSD license, see LICENSE.txt for details.
 
 Any contributions will be licensed under the same conditions.
 
-Copyright (c) 2014 - 2019 Piotr S. Staszewski
+Copyright (c) 2014 - 2021 Piotr S. Staszewski
