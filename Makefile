@@ -1,10 +1,9 @@
-OSES    := linux darwin windows
-ARCHS   := amd64 386
-SRCS    := $(wildcard *.go)
-VER     := $(shell grep -Eo 'VERSION = `(.*)`' main.go | cut -d'`' -f2)
-TGTS    := $(foreach os,$(OSES),$(foreach arch,$(ARCHS),bin/saver-$(os)-$(arch)))
-BUILD   := $(shell echo `whoami`@`hostname -s` on `date`)
-LDFLAGS := -ldflags='-X "main.build=$(BUILD)"'
+OS_ARCHS := linux-amd64 linux-386 windows-amd64 windows-386 darwin-amd64
+SRCS     := $(wildcard *.go)
+VER      := $(shell grep -Eo 'VERSION = `(.*)`' main.go | cut -d'`' -f2)
+TGTS     := $(foreach os_arch,$(OS_ARCHS),bin/saver-$(os_arch))
+BUILD    := $(shell echo `whoami`@`hostname -s` on `date`)
+LDFLAGS  := -ldflags='-X "main.build=$(BUILD)"'
 
 .PHONY: clean dev test
 
